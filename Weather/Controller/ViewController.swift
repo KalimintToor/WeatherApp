@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     
     func updateInterfaceWith(weather: CurrentWeather) {
         DispatchQueue.main.async {
-            self.elementsMainScreenView.set(temp: weather.temperatureString, feelsLikeTemp: weather.feelsLikeTemperatureString, cityName: weather.cityName, image: (UIImage(systemName: weather.systemIconNameString)!.withTintColor(UIColor.systemBlue,renderingMode: .alwaysOriginal)))
+            self.elementsMainScreenView.set(temp: weather.temperatureString, feelsLikeTemp: weather.feelsLikeTemperatureString, cityName: weather.cityName, image: (UIImage(systemName: weather.systemIconNameString)!.withTintColor(UIColor().hexStringToUIColor(hex: infoColor),renderingMode: .alwaysOriginal)))
         }
     }
 }

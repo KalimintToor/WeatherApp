@@ -7,6 +7,8 @@
 
 import UIKit
 
+public let infoColor = "F3FFAB"
+
 extension UIColor {
     
     func hexStringToUIColor (hex:String) -> UIColor {

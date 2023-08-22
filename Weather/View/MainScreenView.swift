@@ -11,7 +11,7 @@ class MainScreenView: UIView {
     
     //MARK: - ЕЛЕМЕНТЫ ТАБЛА ПОГОДЫ
     private lazy var imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "cloud.fill")?.withTintColor(UIColor().hexStringToUIColor(hex: "F3FFAB"), renderingMode: .alwaysOriginal))
+        let imageView = UIImageView(image: UIImage(systemName: "cloud.fill")?.withTintColor(UIColor().hexStringToUIColor(hex: infoColor), renderingMode: .alwaysOriginal))
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -33,7 +33,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 70, weight: .black)
-        label.tintColor = UIColor().hexStringToUIColor(hex: "F3FFAB")
+        label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         label.text = "23"
         return label
     }()
@@ -43,7 +43,7 @@ class MainScreenView: UIView {
         label.text = "°C"
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 70)
-        label.tintColor = UIColor().hexStringToUIColor(hex: "F3FFAB")
+        label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         return label
     }()
     
@@ -52,7 +52,7 @@ class MainScreenView: UIView {
         label.text = "Feels like"
         label.textAlignment = .right
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.tintColor = UIColor().hexStringToUIColor(hex: "F3FFAB")
+        label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         return label
     }()
     
@@ -60,7 +60,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         label.textAlignment = .right
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.tintColor = UIColor().hexStringToUIColor(hex: "F3FFAB")
+        label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         label.text = "21"
         return label
     }()
@@ -88,7 +88,7 @@ class MainScreenView: UIView {
     
     private lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setBackgroundImage(UIImage(systemName: "magnifyingglass.circle.fill")?.withTintColor(UIColor.systemBlue, renderingMode: .alwaysOriginal), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "magnifyingglass.circle.fill")?.withTintColor(UIColor().hexStringToUIColor(hex: infoColor), renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self,
                                action: #selector(searchCityName),
                                for: .touchUpInside)
@@ -100,6 +100,7 @@ class MainScreenView: UIView {
         label.text = "Tashkent".uppercased()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 30, weight: .medium)
+        label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         return label
     }()
     
