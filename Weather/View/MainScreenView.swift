@@ -21,10 +21,10 @@ class MainScreenView: UIView {
         let imageView = UIImageView(image: UIImage(named: "Afternoon"))
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "Afternoon-1")?.withConfiguration(UIImage.SymbolConfiguration(scale: .large)) // Загружаем общее изображение по умолчанию
+        imageView.image = UIImage(named: "Afternoon-1")?.withConfiguration(UIImage.SymbolConfiguration(scale: .large))
         
-        if traitCollection.userInterfaceStyle == .dark { // Проверяем текущую тему
-            imageView.image = UIImage(named: "Night")?.withConfiguration(UIImage.SymbolConfiguration(scale: .large)) // Загружаем темное изображение, если темная тема
+        if traitCollection.userInterfaceStyle == .dark {
+            imageView.image = UIImage(named: "Night")?.withConfiguration(UIImage.SymbolConfiguration(scale: .large))
         }
         return imageView
     }()
@@ -34,7 +34,7 @@ class MainScreenView: UIView {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 70, weight: .black)
         label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
-        label.text = "23"
+        label.text = "0"
         return label
     }()
     
@@ -61,7 +61,7 @@ class MainScreenView: UIView {
         label.textAlignment = .right
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
-        label.text = "21"
+        label.text = "0"
         return label
     }()
     
@@ -97,18 +97,22 @@ class MainScreenView: UIView {
     
     private lazy var cityNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tashkent".uppercased()
+        let userDefaults = UserDefaults.standard
+        
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 30, weight: .medium)
         label.textColor = UIColor().hexStringToUIColor(hex: infoColor)
         return label
     }()
     
+    
+    
     private var action: () -> ()
     init(action: @escaping () -> ()) {
         self.action = action
         super.init(frame: .zero)
         
+        noSignal()
         addSubviews()
         configureConstraints()
         frame = self.frame
@@ -118,14 +122,34 @@ class MainScreenView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(temp: String, feelsLikeTemp: String, cityName: String, image: UIImage){
+    //ПРИ ОТСУТСВИИ ИНТЕРНЕТА БУДУТ ПЕРЕДАВАТЬСЯ ДАННЫЕ ИЗ USERDEFAULTS
+    
+    func noSignal() {
+        let userDefaults = UserDefaults.standard
+        
+        if let weatherData = userDefaults.dictionary(forKey: "currentWeatherData") {
+            cityNameLabel.text = (weatherData["cityName"] as? String)?.uppercased()
+            
+            if let conditionCode = weatherData["conditionCode"] as? Int,
+               let cityName = weatherData["cityName"] as? String,
+               let temperature = weatherData["temperature"] as? Double,
+               let feelsLikeTemperature = weatherData["feelsLikeTemperature"] as? Double{
+                let currentWeather = CurrentWeather(cityName: cityName, conditionCode: conditionCode, temperature: temperature, feelsLikeTemperature: feelsLikeTemperature)
+                let iconName = currentWeather.systemIconNameString
+                imageView.image = UIImage(systemName: iconName)?.withTintColor(UIColor().hexStringToUIColor(hex: infoColor), renderingMode: .alwaysOriginal)
+                feelsLikeTempLabel.text = currentWeather.feelsLikeTemperatureString
+                tempLabel.text = currentWeather.temperatureString
+                cityNameLabel.text = cityName
+            }
+        }
+    }
+    
+    func set(temp: String, feelsLikeTemp: String, cityName: String?, image: UIImage?){
         tempLabel.text = temp
         feelsLikeTempLabel.text = feelsLikeTemp
         cityNameLabel.text = cityName
         imageView.image = image
     }
-    
-    
 }
 
 private extension MainScreenView {

@@ -17,6 +17,7 @@ class NetworkCurrentWeatherManager {
     
     var onCompletion: ((CurrentWeather) -> Void)?
     
+    
     fileprivate func parseJSON(withData data: Data) -> CurrentWeather? {
         let decoder = JSONDecoder()
         do {
@@ -24,7 +25,6 @@ class NetworkCurrentWeatherManager {
             guard let currentWeather = CurrentWeather(currentWeatherData: currentWeatherData) else {
                 return nil
             }
-            print(currentWeather.cityName)
             return currentWeather
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -51,9 +51,14 @@ class NetworkCurrentWeatherManager {
         case .cityName(let city):
             urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&apikey=\(apiKey)&units=metric"
             
+            // Сохранить название города для следующего использования
+            UserDefaults.standard.set(city, forKey: "lastSelectedCity")
+            UserDefaults.standard.synchronize()
+            
         case .coordinate(let latitude, let longitude):
             urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&apikey=\(apiKey)&units=metric"
         }
+
         performRequest(withURLString: urlString)
     }
 }
